@@ -1,13 +1,28 @@
 using System;
+using TMPro;
 using UnityEngine;
 
 public class VendingMachine : MonoBehaviour
 {
-    private string code;
+    private string code = "";
+
+    [SerializeField]
+    private TextMeshProUGUI digicodeText;
+
+    [SerializeField]
+    private int codeLengthLimit = 7; // 7 because it fits the code window, but caca solution
 
     public string Code
     {
         get { return code; }
+    }
+
+
+    public void Start()
+    {
+        UpdateDigicodeText();
+
+        // Peut-être faire en sorte de rechercher le TextMeshPro dans les GameObjects enfants plutôt que le set manuellement ?
     }
 
 
@@ -68,6 +83,13 @@ public class VendingMachine : MonoBehaviour
                 // Code to handle unknown button press
                 break;
         }
+
+        UpdateDigicodeText();
+    }
+
+    private void UpdateDigicodeText()
+    {
+        digicodeText.text = code;
     }
 
     // Used to add a digit to the code
@@ -75,7 +97,15 @@ public class VendingMachine : MonoBehaviour
     {
         if (character.Length == 1)
         {
-            code += character;
+            if (code.Length < codeLengthLimit)
+            {
+                code += character;
+            }
+            else
+            {
+                // Maybe play an error sound ?
+            }
+
         }
         else
         {
@@ -100,6 +130,7 @@ public class VendingMachine : MonoBehaviour
 
             default:
                 Debug.Log(code);
+                ClearCode();
                 break;
         }
     }
